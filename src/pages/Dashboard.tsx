@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { 
   FolderOpen, 
   Users, 
@@ -12,10 +14,78 @@ import {
   AlertTriangle,
   CheckCircle,
   ArrowRight,
-  Calendar
+  Calendar,
+  Plus
 } from "lucide-react";
 
 const Dashboard = () => {
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Quick action handlers
+  const handleNewProject = () => {
+    navigate('/projects');
+    toast({
+      title: "New Project",
+      description: "Redirecting to Projects page to create a new project.",
+    });
+  };
+
+  const handleAddClient = () => {
+    navigate('/clients');
+    toast({
+      title: "Add Client",
+      description: "Redirecting to Clients page to add a new client.",
+    });
+  };
+
+  const handleAddEmployee = () => {
+    navigate('/employees');
+    toast({
+      title: "Add Employee",
+      description: "Redirecting to Employees page to add a new team member.",
+    });
+  };
+
+  const handleScheduleMeeting = () => {
+    navigate('/calendar');
+    toast({
+      title: "Schedule Meeting",
+      description: "Redirecting to Calendar to schedule a new meeting.",
+    });
+  };
+
+  const handleViewAllProjects = () => {
+    navigate('/projects');
+    toast({
+      title: "All Projects",
+      description: "Viewing all projects.",
+    });
+  };
+
+  const handleViewAllTasks = () => {
+    navigate('/calendar');
+    toast({
+      title: "All Tasks",
+      description: "Viewing all tasks in calendar.",
+    });
+  };
+
+  const handleProjectClick = (projectName: string) => {
+    navigate('/projects');
+    toast({
+      title: "Project Details",
+      description: `Viewing details for ${projectName}`,
+    });
+  };
+
+  const handleTaskClick = (taskTitle: string) => {
+    navigate('/calendar');
+    toast({
+      title: "Task Details",
+      description: `Viewing details for: ${taskTitle}`,
+    });
+  };
   // Mock data
   const stats = [
     {
@@ -159,7 +229,11 @@ const Dashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {recentProjects.map((project) => (
-                <div key={project.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                <div 
+                  key={project.id} 
+                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => handleProjectClick(project.name)}
+                >
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center justify-between">
                       <h3 className="font-medium">{project.name}</h3>
@@ -184,7 +258,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="ghost" className="w-full">
+              <Button variant="ghost" className="w-full" onClick={handleViewAllProjects}>
                 View All Projects
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -206,7 +280,11 @@ const Dashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {upcomingTasks.map((task) => (
-                <div key={task.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                <div 
+                  key={task.id} 
+                  className="flex items-start gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => handleTaskClick(task.title)}
+                >
                   <div className="flex-1 space-y-1">
                     <h4 className="font-medium text-sm">{task.title}</h4>
                     <p className="text-xs text-muted-foreground">{task.time}</p>
@@ -221,7 +299,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="ghost" className="w-full">
+              <Button variant="ghost" className="w-full" onClick={handleViewAllTasks}>
                 View All Tasks
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -240,19 +318,19 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Button variant="gradient" className="h-20 flex-col gap-2">
+            <Button variant="gradient" className="h-20 flex-col gap-2" onClick={handleNewProject}>
               <FolderOpen className="h-5 w-5" />
               New Project
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleAddClient}>
               <Users className="h-5 w-5" />
               Add Client
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleAddEmployee}>
               <UserCheck className="h-5 w-5" />
               Add Employee
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2">
+            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleScheduleMeeting}>
               <Calendar className="h-5 w-5" />
               Schedule Meeting
             </Button>
