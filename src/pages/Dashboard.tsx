@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { NewProjectForm } from "@/components/forms/NewProjectForm";
+import { AddClientForm } from "@/components/forms/AddClientForm";
+import { AddEmployeeForm } from "@/components/forms/AddEmployeeForm";
+import { ScheduleMeetingForm } from "@/components/forms/ScheduleMeetingForm";
 import { 
   FolderOpen, 
   Users, 
@@ -21,37 +27,59 @@ import {
 const Dashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [activeDialog, setActiveDialog] = useState<string | null>(null);
 
   // Quick action handlers
   const handleNewProject = () => {
-    navigate('/projects');
-    toast({
-      title: "New Project",
-      description: "Redirecting to Projects page to create a new project.",
-    });
+    setActiveDialog("newProject");
   };
 
   const handleAddClient = () => {
-    navigate('/clients');
-    toast({
-      title: "Add Client",
-      description: "Redirecting to Clients page to add a new client.",
-    });
+    setActiveDialog("addClient");
   };
 
   const handleAddEmployee = () => {
-    navigate('/employees');
-    toast({
-      title: "Add Employee",
-      description: "Redirecting to Employees page to add a new team member.",
-    });
+    setActiveDialog("addEmployee");
   };
 
   const handleScheduleMeeting = () => {
-    navigate('/calendar');
+    setActiveDialog("scheduleMeeting");
+  };
+
+  // Form submission handlers
+  const handleProjectSubmit = (data: any) => {
+    console.log("New project:", data);
+    setActiveDialog(null);
     toast({
-      title: "Schedule Meeting",
-      description: "Redirecting to Calendar to schedule a new meeting.",
+      title: "Project Created",
+      description: `${data.name} has been created successfully.`,
+    });
+  };
+
+  const handleClientSubmit = (data: any) => {
+    console.log("New client:", data);
+    setActiveDialog(null);
+    toast({
+      title: "Client Added",
+      description: `${data.name} from ${data.company} has been added.`,
+    });
+  };
+
+  const handleEmployeeSubmit = (data: any) => {
+    console.log("New employee:", data);
+    setActiveDialog(null);
+    toast({
+      title: "Employee Added",
+      description: `${data.firstName} ${data.lastName} has been added to the team.`,
+    });
+  };
+
+  const handleMeetingSubmit = (data: any) => {
+    console.log("New meeting:", data);
+    setActiveDialog(null);
+    toast({
+      title: "Meeting Scheduled",
+      description: `${data.title} has been scheduled successfully.`,
     });
   };
 
@@ -337,6 +365,55 @@ const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Form Dialogs */}
+      <Dialog open={activeDialog === "newProject"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Create New Project</DialogTitle>
+          </DialogHeader>
+          <NewProjectForm 
+            onSubmit={handleProjectSubmit}
+            onCancel={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activeDialog === "addClient"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Client</DialogTitle>
+          </DialogHeader>
+          <AddClientForm 
+            onSubmit={handleClientSubmit}
+            onCancel={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activeDialog === "addEmployee"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Employee</DialogTitle>
+          </DialogHeader>
+          <AddEmployeeForm 
+            onSubmit={handleEmployeeSubmit}
+            onCancel={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activeDialog === "scheduleMeeting"} onOpenChange={() => setActiveDialog(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Schedule Meeting</DialogTitle>
+          </DialogHeader>
+          <ScheduleMeetingForm 
+            onSubmit={handleMeetingSubmit}
+            onCancel={() => setActiveDialog(null)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
