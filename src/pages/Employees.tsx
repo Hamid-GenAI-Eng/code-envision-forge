@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Plus, 
   Search, 
@@ -34,10 +35,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AddEmployeeForm } from "@/components/forms/AddEmployeeForm";
+import { useToast } from "@/hooks/use-toast";
 
 const Employees = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("all");
+  const [isAddEmployeeOpen, setIsAddEmployeeOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { toast } = useToast();
 
   // Mock data
   const employees = [
@@ -145,6 +152,20 @@ const Employees = () => {
     return matchesSearch && matchesDepartment;
   });
 
+  const handleAddEmployee = (data: any) => {
+    console.log("New employee added:", data);
+    toast({
+      title: "Employee Added",
+      description: "New employee has been successfully added.",
+    });
+    setIsAddEmployeeOpen(false);
+  };
+
+  const handleViewProfile = (employee: any) => {
+    setSelectedEmployee(employee);
+    setIsProfileOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -155,10 +176,23 @@ const Employees = () => {
             Manage your team members and track their performance
           </p>
         </div>
-        <Button variant="gradient" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Employee
-        </Button>
+        <Dialog open={isAddEmployeeOpen} onOpenChange={setIsAddEmployeeOpen}>
+          <DialogTrigger asChild>
+            <Button variant="gradient" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Add Employee
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add New Employee</DialogTitle>
+            </DialogHeader>
+            <AddEmployeeForm
+              onSubmit={handleAddEmployee}
+              onCancel={() => setIsAddEmployeeOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Filters */}
@@ -221,7 +255,7 @@ const Employees = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-popover z-50" align="end">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleViewProfile(employee)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View Profile
                     </DropdownMenuItem>
@@ -312,7 +346,7 @@ const Employees = () => {
 
               {/* Actions */}
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleViewProfile(employee)}>
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Button>
@@ -340,7 +374,7 @@ const Employees = () => {
                   Try adjusting your search criteria or add a new employee
                 </p>
               </div>
-              <Button variant="gradient">
+              <Button variant="gradient" onClick={() => setIsAddEmployeeOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add New Employee
               </Button>
@@ -348,6 +382,131 @@ const Employees = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Employee Profile Dialog */}
+      <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Employee Profile</DialogTitle>
+          </DialogHeader>
+          {selectedEmployee && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Personal Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage src={selectedEmployee.avatar} alt={selectedEmployee.name} />
+                        <AvatarFallback className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-lg">
+                          {selectedEmployee.name.split(' ').map((n: string) => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="text-xl font-bold">{selectedEmployee.name}</h3>
+                        <p className="text-muted-foreground">{selectedEmployee.position}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedEmployee.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedEmployee.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedEmployee.location}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <span>Joined: {selectedEmployee.joinDate}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Work Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="font-medium">Department:</p>
+                      <Badge variant="secondary">{selectedEmployee.department}</Badge>
+                    </div>
+                    <div>
+                      <p className="font-medium">Status:</p>
+                      <Badge className={getStatusColor(selectedEmployee.status)}>
+                        {selectedEmployee.status}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="font-medium">Salary:</p>
+                      <p className="text-muted-foreground">{selectedEmployee.salary}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Performance Rating:</p>
+                      <div className="flex items-center gap-2">
+                        <Star className="h-4 w-4 text-yellow-500" />
+                        <span className="font-medium">{selectedEmployee.performance}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Project Statistics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary">{selectedEmployee.currentProjects}</div>
+                      <div className="text-sm text-muted-foreground">Active Projects</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-accent">{selectedEmployee.completedProjects}</div>
+                      <div className="text-sm text-muted-foreground">Completed Projects</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Skills</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedEmployee.skills.map((skill: string, index: number) => (
+                      <Badge key={index} variant="outline">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <div className="flex gap-3">
+                <Button variant="default">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Send Message
+                </Button>
+                <Button variant="outline">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Employee
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

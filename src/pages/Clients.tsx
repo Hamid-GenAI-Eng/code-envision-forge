@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Plus, 
   Search, 
@@ -33,10 +34,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AddClientForm } from "@/components/forms/AddClientForm";
+import { useToast } from "@/hooks/use-toast";
 
 const Clients = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isAddClientOpen, setIsAddClientOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { toast } = useToast();
 
   // Mock data
   const clients = [
@@ -135,6 +142,20 @@ const Clients = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const handleAddClient = (data: any) => {
+    console.log("New client added:", data);
+    toast({
+      title: "Client Added",
+      description: "New client has been successfully added.",
+    });
+    setIsAddClientOpen(false);
+  };
+
+  const handleViewClient = (client: any) => {
+    setSelectedClient(client);
+    setIsDetailsOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -145,10 +166,23 @@ const Clients = () => {
             Manage your client relationships and track project history
           </p>
         </div>
-        <Button variant="gradient" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Client
-        </Button>
+        <Dialog open={isAddClientOpen} onOpenChange={setIsAddClientOpen}>
+          <DialogTrigger asChild>
+            <Button variant="gradient" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Add Client
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add New Client</DialogTitle>
+            </DialogHeader>
+            <AddClientForm
+              onSubmit={handleAddClient}
+              onCancel={() => setIsAddClientOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Filters */}
@@ -210,7 +244,7 @@ const Clients = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-popover z-50" align="end">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleViewClient(client)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View Profile
                     </DropdownMenuItem>
@@ -284,7 +318,7 @@ const Clients = () => {
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Contact
                 </Button>
-                <Button variant="ghost" size="sm" className="flex-1">
+                <Button variant="ghost" size="sm" className="flex-1" onClick={() => handleViewClient(client)}>
                   <Eye className="mr-2 h-4 w-4" />
                   View
                 </Button>
@@ -308,7 +342,7 @@ const Clients = () => {
                   Try adjusting your search criteria or add a new client
                 </p>
               </div>
-              <Button variant="gradient">
+              <Button variant="gradient" onClick={() => setIsAddClientOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Add New Client
               </Button>
@@ -316,6 +350,99 @@ const Clients = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Client Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Client Details</DialogTitle>
+          </DialogHeader>
+          {selectedClient && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Contact Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage src={selectedClient.avatar} alt={selectedClient.name} />
+                        <AvatarFallback className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-lg">
+                          {selectedClient.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="text-xl font-bold">{selectedClient.name}</h3>
+                        <p className="text-muted-foreground">{selectedClient.contactPerson}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedClient.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedClient.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Building className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedClient.company}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedClient.location}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Business Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="font-medium">Status:</p>
+                      <Badge className={getStatusColor(selectedClient.status)}>
+                        {selectedClient.status}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="font-medium">Total Projects:</p>
+                      <p className="text-muted-foreground">{selectedClient.totalProjects}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Total Revenue:</p>
+                      <p className="text-muted-foreground">{selectedClient.totalRevenue}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Join Date:</p>
+                      <p className="text-muted-foreground">{selectedClient.joinDate}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Last Contact:</p>
+                      <p className="text-muted-foreground">{selectedClient.lastContact}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="flex gap-3">
+                <Button variant="default">
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Send Message
+                </Button>
+                <Button variant="outline">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Client
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Plus, 
   Search, 
@@ -30,10 +31,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { NewProjectForm } from "@/components/forms/NewProjectForm";
+import { useToast } from "@/hooks/use-toast";
 
 const Projects = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isNewProjectOpen, setIsNewProjectOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { toast } = useToast();
 
   // Mock data
   const projects = [
@@ -131,6 +138,20 @@ const Projects = () => {
     return matchesSearch && matchesStatus;
   });
 
+  const handleNewProject = (data: any) => {
+    console.log("New project created:", data);
+    toast({
+      title: "Project Created",
+      description: "New project has been successfully created.",
+    });
+    setIsNewProjectOpen(false);
+  };
+
+  const handleViewDetails = (project: any) => {
+    setSelectedProject(project);
+    setIsDetailsOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -141,10 +162,23 @@ const Projects = () => {
             Manage and track all your projects in one place
           </p>
         </div>
-        <Button variant="gradient" className="gap-2">
-          <Plus className="h-4 w-4" />
-          New Project
-        </Button>
+        <Dialog open={isNewProjectOpen} onOpenChange={setIsNewProjectOpen}>
+          <DialogTrigger asChild>
+            <Button variant="gradient" className="gap-2">
+              <Plus className="h-4 w-4" />
+              New Project
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Create New Project</DialogTitle>
+            </DialogHeader>
+            <NewProjectForm
+              onSubmit={handleNewProject}
+              onCancel={() => setIsNewProjectOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Filters */}
@@ -199,7 +233,7 @@ const Projects = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-popover z-50" align="end">
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleViewDetails(project)}>
                       <Eye className="mr-2 h-4 w-4" />
                       View Details
                     </DropdownMenuItem>
@@ -271,7 +305,7 @@ const Projects = () => {
 
               {/* Actions */}
               <div className="flex gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleViewDetails(project)}>
                   View Details
                 </Button>
                 <Button variant="ghost" size="sm" className="flex-1">
@@ -297,7 +331,7 @@ const Projects = () => {
                   Try adjusting your search criteria or create a new project
                 </p>
               </div>
-              <Button variant="gradient">
+              <Button variant="gradient" onClick={() => setIsNewProjectOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />
                 Create New Project
               </Button>
@@ -305,6 +339,90 @@ const Projects = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Project Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Project Details</DialogTitle>
+          </DialogHeader>
+          {selectedProject && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Project Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="font-medium">Name:</p>
+                      <p className="text-muted-foreground">{selectedProject.name}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Client:</p>
+                      <p className="text-muted-foreground">{selectedProject.client}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Description:</p>
+                      <p className="text-muted-foreground">{selectedProject.description}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Status:</p>
+                      <Badge className={getStatusColor(selectedProject.status)}>
+                        {selectedProject.status}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Project Stats</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="font-medium">Budget:</p>
+                      <p className="text-muted-foreground">{selectedProject.budget}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Progress:</p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span>{selectedProject.progress}%</span>
+                        </div>
+                        <Progress value={selectedProject.progress} />
+                      </div>
+                    </div>
+                    <div>
+                      <p className="font-medium">Start Date:</p>
+                      <p className="text-muted-foreground">{selectedProject.startDate}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium">Deadline:</p>
+                      <p className="text-muted-foreground">{selectedProject.deadline}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Team Members</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.team.map((member: string, index: number) => (
+                      <Badge key={index} variant="secondary">
+                        {member}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
