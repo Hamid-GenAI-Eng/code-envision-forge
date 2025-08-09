@@ -8,11 +8,14 @@ import {
   Calendar, 
   FileText, 
   BarChart3, 
-  Settings,
+  Settings as SettingsIcon,
   Bell,
   Search,
   Menu,
-  X
+  X,
+  Video,
+  Clock,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,9 +36,12 @@ const sidebarItems = [
   { title: "Clients", url: "/clients", icon: Users },
   { title: "Employees", url: "/employees", icon: UserCheck },
   { title: "Calendar", url: "/calendar", icon: Calendar },
+  { title: "Meetings", url: "/meetings", icon: Video },
+  { title: "Attendance", url: "/attendance", icon: Clock },
+  { title: "Communication", url: "/communication", icon: MessageSquare },
   { title: "Notes", url: "/notes", icon: FileText },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Settings", url: "/settings", icon: SettingsIcon },
 ];
 
 export default function Layout() {
