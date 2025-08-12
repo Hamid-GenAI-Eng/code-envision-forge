@@ -169,21 +169,21 @@ const Employees = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Employees</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Employees</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Manage your team members and track their performance
           </p>
         </div>
         <Dialog open={isAddEmployeeOpen} onOpenChange={setIsAddEmployeeOpen}>
           <DialogTrigger asChild>
-            <Button variant="gradient" className="gap-2">
+            <Button variant="gradient" className="gap-2 w-full md:w-auto">
               <Plus className="h-4 w-4" />
               Add Employee
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] md:max-w-2xl max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>Add New Employee</DialogTitle>
             </DialogHeader>
@@ -197,9 +197,9 @@ const Employees = () => {
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center">
-            <div className="relative flex-1 max-w-md">
+        <CardContent className="pt-4 md:pt-6">
+          <div className="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search employees..."
@@ -210,7 +210,7 @@ const Employees = () => {
             </div>
             <div className="flex gap-2">
               <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-full md:w-40">
                   <SelectValue placeholder="Filter by department" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover z-50">
@@ -222,7 +222,7 @@ const Employees = () => {
                   <SelectItem value="Marketing">Marketing</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="icon" className="shrink-0">
                 <Filter className="h-4 w-4" />
               </Button>
             </div>
@@ -231,7 +231,7 @@ const Employees = () => {
       </Card>
 
       {/* Employees Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {filteredEmployees.map((employee) => (
           <Card key={employee.id} className="hover:shadow-md transition-shadow">
             <CardHeader>

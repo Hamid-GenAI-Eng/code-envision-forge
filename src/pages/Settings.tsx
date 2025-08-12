@@ -22,25 +22,25 @@ export default function Settings() {
 
   return (
     <main>
-      <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+      <header className="mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground">Configure your workspace preferences and policies.</p>
       </header>
 
-      <Tabs defaultValue="admin" className="space-y-6">
-        <TabsList>
+      <Tabs defaultValue="admin" className="space-y-4 md:space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="admin">Admin</TabsTrigger>
           <TabsTrigger value="user">User</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="admin" className="space-y-6">
+        <TabsContent value="admin" className="space-y-4 md:space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Meeting preferences</CardTitle>
+              <CardTitle className="text-lg md:text-xl">Meeting preferences</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Default meeting duration</Label>
+                <Label className="text-sm">Default meeting duration</Label>
                 <Select defaultValue="30">
                   <SelectTrigger><SelectValue placeholder="Select" /></SelectTrigger>
                   <SelectContent>
@@ -51,21 +51,21 @@ export default function Settings() {
                 </Select>
               </div>
               <div className="flex items-center justify-between rounded-md border p-3">
-                <div>
-                  <Label className="block">Enable recordings</Label>
+                <div className="flex-1">
+                  <Label className="block text-sm">Enable recordings</Label>
                   <p className="text-xs text-muted-foreground">Allow users to record meetings</p>
                 </div>
                 <Switch defaultChecked />
               </div>
               <div className="flex items-center justify-between rounded-md border p-3 md:col-span-2">
-                <div>
-                  <Label className="block">Allow screen sharing</Label>
+                <div className="flex-1">
+                  <Label className="block text-sm">Allow screen sharing</Label>
                   <p className="text-xs text-muted-foreground">Permit screen sharing for participants</p>
                 </div>
                 <Switch defaultChecked />
               </div>
               <div className="md:col-span-2 flex justify-end">
-                <Button onClick={() => handleSave("Meeting preferences")} variant="gradient">Save changes</Button>
+                <Button onClick={() => handleSave("Meeting preferences")} variant="gradient" className="w-full md:w-auto">Save changes</Button>
               </div>
             </CardContent>
           </Card>

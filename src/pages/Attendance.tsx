@@ -94,13 +94,13 @@ export default function Attendance() {
 
   return (
     <main className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Attendance</h1>
+      <header className="space-y-1">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">Attendance</h1>
         <p className="text-sm text-muted-foreground">Track remote and onsite attendance. Frontend-only demo.</p>
       </header>
 
-      <Tabs defaultValue="remote" className="space-y-6">
-        <TabsList>
+      <Tabs defaultValue="remote" className="space-y-4 md:space-y-6">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="remote">Remote</TabsTrigger>
           <TabsTrigger value="onsite">Onsite (QR)</TabsTrigger>
         </TabsList>

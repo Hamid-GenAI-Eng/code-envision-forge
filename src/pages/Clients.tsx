@@ -159,21 +159,21 @@ const Clients = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Clients</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Clients</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Manage your client relationships and track project history
           </p>
         </div>
         <Dialog open={isAddClientOpen} onOpenChange={setIsAddClientOpen}>
           <DialogTrigger asChild>
-            <Button variant="gradient" className="gap-2">
+            <Button variant="gradient" className="gap-2 w-full md:w-auto">
               <Plus className="h-4 w-4" />
               Add Client
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] md:max-w-2xl max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>Add New Client</DialogTitle>
             </DialogHeader>
@@ -220,7 +220,7 @@ const Clients = () => {
       </Card>
 
       {/* Clients Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {filteredClients.map((client) => (
           <Card key={client.id} className="hover:shadow-md transition-shadow">
             <CardHeader>

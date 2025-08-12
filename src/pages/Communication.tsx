@@ -65,19 +65,19 @@ export default function Communication() {
 
   return (
     <main className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Communication Hub</h1>
+      <header className="space-y-1">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">Communication Hub</h1>
         <p className="text-sm text-muted-foreground">Threads for projects, teams, clients. Frontend-only demo.</p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-3">
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Threads</CardTitle>
+            <CardTitle className="text-lg md:text-xl">Threads</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {demoThreads.map((t) => (
-              <Button key={t.id} variant={active === t.id ? "default" : "outline"} className="w-full justify-start" onClick={() => setActive(t.id)}>
+              <Button key={t.id} variant={active === t.id ? "default" : "outline"} className="w-full justify-start text-sm" onClick={() => setActive(t.id)}>
                 {t.name}
               </Button>
             ))}
@@ -86,10 +86,10 @@ export default function Communication() {
 
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>{demoThreads.find((t) => t.id === active)?.name}</CardTitle>
+            <CardTitle className="text-lg md:text-xl">{demoThreads.find((t) => t.id === active)?.name}</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
-            <ScrollArea className="h-80 border rounded-md p-3">
+            <ScrollArea className="h-64 md:h-80 border rounded-md p-3">
               <div className="space-y-3">
                 {list.map((m) => (
                   <div key={m.id} className="text-sm">

@@ -72,15 +72,15 @@ export default function Meetings() {
 
   return (
     <main className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold tracking-tight">Meetings</h1>
+      <header className="space-y-1">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">Meetings</h1>
         <p className="text-sm text-muted-foreground">Schedule and host meetings. Frontend-only demo (no backend).</p>
       </header>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Schedule a meeting</CardTitle>
+            <CardTitle className="text-lg md:text-xl">Schedule a meeting</CardTitle>
           </CardHeader>
           <CardContent>
             <ScheduleMeetingForm onSubmit={handleSchedule} onCancel={() => setScheduled(null)} />
@@ -89,7 +89,7 @@ export default function Meetings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Details & integrations</CardTitle>
+            <CardTitle className="text-lg md:text-xl">Details & integrations</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {scheduled ? (

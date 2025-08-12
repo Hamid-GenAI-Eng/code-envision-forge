@@ -215,25 +215,25 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
+      <div className="space-y-2">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Welcome back! Here's what's happening at Code Envision today.
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 md:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
           <Card key={index} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-xs md:text-sm font-medium">
                 {stat.title}
               </CardTitle>
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-xl md:text-2xl font-bold">{stat.value}</div>
               <p className="text-xs text-muted-foreground">
                 {stat.change}
               </p>
@@ -242,43 +242,43 @@ const Dashboard = () => {
         ))}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-3">
         {/* Recent Projects */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FolderOpen className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <FolderOpen className="h-4 w-4 md:h-5 md:w-5" />
               Recent Projects
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Your active projects and their current status
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {recentProjects.map((project) => (
                 <div 
                   key={project.id} 
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                  className="p-3 md:p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
                   onClick={() => handleProjectClick(project.name)}
                 >
                   <div className="space-y-2 flex-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-medium">{project.name}</h3>
-                      <Badge className={getStatusColor(project.status)}>
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="font-medium text-sm md:text-base flex-1">{project.name}</h3>
+                      <Badge className={`${getStatusColor(project.status)} text-xs whitespace-nowrap`}>
                         {project.status}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">{project.client}</p>
+                    <p className="text-xs md:text-sm text-muted-foreground">{project.client}</p>
                     <div className="space-y-1">
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-xs md:text-sm">
                         <span>Progress</span>
                         <span>{project.progress}%</span>
                       </div>
                       <Progress value={project.progress} className="h-2" />
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
+                    <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
+                      <Clock className="h-3 w-3 md:h-4 md:w-4" />
                       Due: {project.deadline}
                     </div>
                   </div>
@@ -286,7 +286,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="ghost" className="w-full" onClick={handleViewAllProjects}>
+              <Button variant="ghost" className="w-full text-sm" onClick={handleViewAllProjects}>
                 View All Projects
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -297,16 +297,16 @@ const Dashboard = () => {
         {/* Upcoming Tasks */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+              <CheckCircle className="h-4 w-4 md:h-5 md:w-5" />
               Upcoming Tasks
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Your tasks and deadlines
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {upcomingTasks.map((task) => (
                 <div 
                   key={task.id} 
@@ -314,7 +314,7 @@ const Dashboard = () => {
                   onClick={() => handleTaskClick(task.title)}
                 >
                   <div className="flex-1 space-y-1">
-                    <h4 className="font-medium text-sm">{task.title}</h4>
+                    <h4 className="font-medium text-xs md:text-sm">{task.title}</h4>
                     <p className="text-xs text-muted-foreground">{task.time}</p>
                     <div className="flex items-center gap-2">
                       <AlertTriangle className={`h-3 w-3 ${getPriorityColor(task.priority)}`} />
@@ -327,7 +327,7 @@ const Dashboard = () => {
               ))}
             </div>
             <div className="mt-4">
-              <Button variant="ghost" className="w-full" onClick={handleViewAllTasks}>
+              <Button variant="ghost" className="w-full text-sm" onClick={handleViewAllTasks}>
                 View All Tasks
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -339,27 +339,27 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-lg md:text-xl">Quick Actions</CardTitle>
+          <CardDescription className="text-sm">
             Frequently used actions to speed up your workflow
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Button variant="gradient" className="h-20 flex-col gap-2" onClick={handleNewProject}>
-              <FolderOpen className="h-5 w-5" />
+          <div className="grid gap-3 md:gap-4 grid-cols-2 lg:grid-cols-4">
+            <Button variant="gradient" className="h-16 md:h-20 flex-col gap-1 md:gap-2 text-xs md:text-sm" onClick={handleNewProject}>
+              <FolderOpen className="h-4 w-4 md:h-5 md:w-5" />
               New Project
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleAddClient}>
-              <Users className="h-5 w-5" />
+            <Button variant="outline" className="h-16 md:h-20 flex-col gap-1 md:gap-2 text-xs md:text-sm" onClick={handleAddClient}>
+              <Users className="h-4 w-4 md:h-5 md:w-5" />
               Add Client
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleAddEmployee}>
-              <UserCheck className="h-5 w-5" />
+            <Button variant="outline" className="h-16 md:h-20 flex-col gap-1 md:gap-2 text-xs md:text-sm" onClick={handleAddEmployee}>
+              <UserCheck className="h-4 w-4 md:h-5 md:w-5" />
               Add Employee
             </Button>
-            <Button variant="outline" className="h-20 flex-col gap-2" onClick={handleScheduleMeeting}>
-              <Calendar className="h-5 w-5" />
+            <Button variant="outline" className="h-16 md:h-20 flex-col gap-1 md:gap-2 text-xs md:text-sm" onClick={handleScheduleMeeting}>
+              <Calendar className="h-4 w-4 md:h-5 md:w-5" />
               Schedule Meeting
             </Button>
           </div>
