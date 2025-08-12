@@ -16,6 +16,7 @@ import {
   Video,
   Clock,
   MessageSquare,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ const sidebarItems = [
   { title: "Meetings", url: "/meetings", icon: Video },
   { title: "Attendance", url: "/attendance", icon: Clock },
   { title: "Communication", url: "/communication", icon: MessageSquare },
+  { title: "Client Portal", url: "/client-portal", icon: ExternalLink },
   { title: "Notes", url: "/notes", icon: FileText },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
   { title: "Settings", url: "/settings", icon: SettingsIcon },

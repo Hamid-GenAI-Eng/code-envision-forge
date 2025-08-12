@@ -15,6 +15,7 @@ import Meetings from "./pages/Meetings";
 import Attendance from "./pages/Attendance";
 import Communication from "./pages/Communication";
 import Settings from "./pages/Settings";
+import ClientPortal from "./pages/ClientPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="attendance" element={<Attendance />} />
             <Route path="communication" element={<Communication />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="client-portal" element={<ClientPortal />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
